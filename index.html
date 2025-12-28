@@ -20,6 +20,494 @@
       transition: background 1.5s ease;
     }
 
+    /* PASSWORD GATE */
+    .password-gate {
+      position: fixed;
+      inset: 0;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.8s ease;
+    }
+
+    .password-gate::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+      pointer-events: none;
+    }
+
+    .password-gate.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .password-card {
+      --borderradius: 14px;
+      --bgsize: 0.38rem;
+      padding: 2rem;
+      border: 1px solid;
+      position: relative;
+      background: white;
+      border-radius: var(--borderradius);
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      z-index: 1;
+      animation: cardEnter 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    .password-card.hide-content {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    .password-card::before,
+    .password-card::after {
+      border-radius: var(--borderradius);
+      background-image: linear-gradient(
+        45deg,
+        #fff 33.33%,
+        rgba(0, 0, 0, 0.95) 33.33%,
+        rgba(0, 0, 0, 0.95) 50%,
+        #fff 50%,
+        #fff 83.33%,
+        rgba(0, 0, 0, 0.95) 83.33%,
+        rgba(0, 0, 0, 0.95) 100%
+      );
+      content: "";
+      position: absolute;
+      z-index: -2;
+      top: .75rem;
+      left: .75rem;
+      width: 100%;
+      height: 100%;
+      background-size: var(--bgsize) var(--bgsize);
+    }
+
+    .password-card::before {
+      top: 0;
+      left: 0;
+      background: white;
+      z-index: -1;
+    }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .password-card h2 {
+      margin-bottom: 0.5rem;
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    .password-card p {
+      margin-bottom: 1.5rem;
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .password-input {
+      width: 100%;
+      padding: 0.9rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .password-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .password-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .password-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .password-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-msg {
+      color: #e74c3c;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .error-msg.show {
+      opacity: 1;
+    }
+
+    .form-content {
+      transition: opacity 0.3s ease;
+    }
+
+    .form-content.hidden {
+      display: none;
+    }
+
+    /* LOADING SCREEN */
+    .loading-screen {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .loading-screen.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .loading-shape {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+
+    /* Circle Animation */
+    .shape-circle {
+      width: 100%;
+      height: 100%;
+      border: 4px solid #e0e0e0;
+      border-top-color: #333;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Star Animation - Loading fills the star */
+    .shape-star {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .shape-star::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: #e0e0e0;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    .shape-star::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 0%;
+      width: 100%;
+      background: #333;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation: fillStar 2s ease-in-out infinite;
+    }
+
+    @keyframes fillStar {
+      0% { height: 0%; }
+      50% { height: 100%; }
+      100% { height: 0%; }
+    }
+
+    /* Heart Animation - Fixed shape */
+    .shape-heart {
+      width: 80px;
+      height: 72px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .shape-heart::before,
+    .shape-heart::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 40px;
+      height: 64px;
+      background: #e0e0e0;
+      border-radius: 40px 40px 0 0;
+    }
+
+    .shape-heart::before {
+      left: 40px;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+
+    .shape-heart::after {
+      left: 0;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+    }
+
+    .heart-fill-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      overflow: hidden;
+      animation: fillHeartUp 1s ease-in-out infinite;
+    }
+
+    .heart-fill-container::before,
+    .heart-fill-container::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      width: 40px;
+      height: 64px;
+      background: #e74c3c;
+      border-radius: 40px 40px 0 0;
+    }
+
+    .heart-fill-container::before {
+      left: 40px;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+
+    .heart-fill-container::after {
+      left: 0;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+    }
+
+    @keyframes fillHeartUp {
+      0%, 100% { height: 0%; }
+      50% { height: 100%; }
+    }
+
+    .loading-text {
+      font-size: 1rem;
+      color: #666;
+      margin-top: 1rem;
+    }
+
+    /* VERIFIED SCREEN */
+    .verified-screen {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .verified-screen.show {
+      display: block;
+      animation: verifiedEnter 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes verifiedEnter {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .verified-star-bg {
+      position: absolute;
+      inset: -20px;
+      pointer-events: none;
+      opacity: 0;
+      animation: starBgFade 1s ease forwards;
+    }
+
+    @keyframes starBgFade {
+      to { opacity: 1; }
+    }
+
+    .verified-star-bg .mini-star {
+      position: absolute;
+      font-size: 1.5rem;
+      animation: twinkleStar 1.5s ease-in-out infinite;
+    }
+
+    @keyframes twinkleStar {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .verified-emoticon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: bounce 0.6s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .verified-screen h3 {
+      font-size: 1.5rem;
+      color: #27ae60;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .verified-screen p {
+      color: #666;
+      font-size: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .enter-btn {
+      margin-top: 1.5rem;
+      padding: 0.9rem 2rem;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .enter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* POKE BUTTON */
+    .poke-btn {
+      margin-top: 1.5rem;
+      padding: 0.9rem 2rem;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .poke-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* WATER DROPLET EFFECT */
+    .water-droplet {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: dropletExpand 1.2s ease-out forwards;
+    }
+
+    .water-droplet::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.6), transparent);
+      border-radius: 50%;
+      animation: ripple 1.2s ease-out forwards;
+    }
+
+    @keyframes dropletExpand {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(3);
+        opacity: 0;
+      }
+    }
+
+    /* CARD DISSOLVE */
+    @keyframes dissolve {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1.05);
+        filter: blur(2px);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.95);
+        filter: blur(10px);
+      }
+    }
+
+    .password-card.dissolving {
+      animation: dissolve 1s ease forwards;
+    }
+
     .container {
       display: flex;
       flex-direction: column;
@@ -27,6 +515,10 @@
       padding: 1rem;
       gap: 2rem;
       min-height: 100vh;
+    }
+
+    .container.show {
+      opacity: 1;
     }
 
     /* STAR FIELD */
@@ -197,6 +689,25 @@
       z-index: 1000;
       transition: transform 0.3s ease;
       border: none;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .music-btn.show {
+      opacity: 1;
+      pointer-events: all;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .music-btn:hover {
@@ -288,7 +799,7 @@
     }
 
     @media (max-width: 480px) {
-      .box {
+      .box, .password-card {
         padding: 1.4rem;
       }
       
@@ -305,6 +816,50 @@
 
 <body>
 
+  <!-- PASSWORD GATE -->
+  <div class="password-gate" id="passwordGate">
+    <div class="password-card" id="passwordCard">
+      <!-- FORM CONTENT -->
+      <div class="form-content" id="formContent">
+        <h2>Welcome (⁠◍⁠•⁠ᴗ⁠•⁠◍⁠)</h2>
+        <p>Please enter your name (⁠ ⁠╹⁠▽⁠╹⁠ ⁠)</p>
+        
+        <input 
+          type="text" 
+          class="password-input" 
+          id="passwordInput" 
+          placeholder="Enter your name..."
+          autocomplete="off"
+        >
+        
+        <button class="password-btn" id="submitBtn" onclick="checkPassword()">
+          Enter
+        </button>
+        
+        <p class="error-msg" id="errorMsg">Hmm, that's not quite right... (⁠•⁠ ⁠▽⁠ ⁠•⁠;⁠)</p>
+      </div>
+
+      <!-- LOADING SCREEN -->
+      <div class="loading-screen" id="loadingScreen">
+        <div class="loading-shape" id="loadingShape">
+          <div class="shape-circle"></div>
+        </div>
+        <p class="loading-text" id="loadingText">Verifying...</p>
+      </div>
+
+      <!-- VERIFIED SCREEN -->
+      <div class="verified-screen" id="verifiedScreen">
+        <div class="verified-star-bg" id="verifiedStars"></div>
+        <div class="verified-emoticon">(⁠◍⁠•⁠ᴗ⁠•⁠◍⁠)⁠✧⁠*⁠。</div>
+        <h3>Verified!</h3>
+        <p>Welcome, Ivy~ ♡</p>
+        <button class="enter-btn" onclick="enterSite()">
+          Enter (⁠ ⁠ꈍ⁠ᴗ⁠ꈍ⁠)
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- STAR FIELD -->
   <div id="starfield"></div>
 
@@ -320,9 +875,9 @@
     </div>
   </div>
 
-  <button class="music-btn" onclick="openPopup()">🎵</button>
+  <button class="music-btn" id="musicBtn" onclick="openPopup()">🎵</button>
 
-  <div class="container">
+  <div class="container" id="mainContainer">
     <!-- MAIN LETTER -->
     <div class="box">
       <h2>TruE</h2>
@@ -364,22 +919,159 @@
     <div class="box locked parallax" id="unlockCard">
       <h2>…</h2>
       <p class="letter">
-        thank you for reading you then
+        thank you for your time (⁠*⁠´⁠ω⁠｀⁠*⁠)
         <br><br>
         <strong>
           Summary:<br>
-          *･゜ﾟ(^O^)↝ I like you = !false
+          iLikeYou = !false;
         </strong>
+        <br><br>
+        With all respect (⁠人⁠*⁠´⁠∀⁠｀⁠)⁠｡⁠*ﾟ⁠+
       </p>
+      <a href="https://www.facebook.com" target="_blank" class="poke-btn">
+        Poke 👉
+      </a>
     </div>
   </div>
 
   <script>
+    const passwordGate = document.getElementById("passwordGate");
+    const passwordCard = document.getElementById("passwordCard");
+    const formContent = document.getElementById("formContent");
+    const passwordInput = document.getElementById("passwordInput");
+    const submitBtn = document.getElementById("submitBtn");
+    const errorMsg = document.getElementById("errorMsg");
+    const loadingScreen = document.getElementById("loadingScreen");
+    const loadingShape = document.getElementById("loadingShape");
+    const loadingText = document.getElementById("loadingText");
+    const verifiedScreen = document.getElementById("verifiedScreen");
+    const mainContainer = document.getElementById("mainContainer");
+    const musicBtn = document.getElementById("musicBtn");
     const popup = document.getElementById("popup");
-    const musicBtn = document.querySelector(".music-btn");
     const audio = document.getElementById("bgMusic");
     const starfield = document.getElementById("starfield");
     const floatingWords = document.getElementById("floatingWords");
+
+    // Password check
+    function checkPassword() {
+      const input = passwordInput.value.trim().toLowerCase();
+      
+      if (input === "ivy") {
+        errorMsg.classList.remove("show");
+        passwordInput.disabled = true;
+        submitBtn.disabled = true;
+        
+        // Hide form, show loading
+        setTimeout(() => {
+          formContent.classList.add("hidden");
+          loadingScreen.classList.add("show");
+          startLoadingSequence();
+        }, 300);
+      } else {
+        errorMsg.classList.add("show");
+        passwordInput.value = "";
+      }
+    }
+
+    // Loading sequence: Circle -> Star -> Heart
+    function startLoadingSequence() {
+      // Circle (2 seconds)
+      setTimeout(() => {
+        loadingShape.innerHTML = '<div class="shape-circle"></div>';
+        loadingText.textContent = "Checking...";
+      }, 0);
+
+      // Star (2 seconds)
+      setTimeout(() => {
+        loadingShape.innerHTML = '<div class="shape-star"></div>';
+        loadingText.textContent = "Almost there...";
+      }, 2000);
+
+      // Heart (1 second)
+      setTimeout(() => {
+        loadingShape.innerHTML = '<div class="shape-heart"><div class="heart-fill-container"></div></div>';
+        loadingText.textContent = "Perfect! ♡";
+      }, 4000);
+
+      // Show verified with stars
+      setTimeout(() => {
+        loadingScreen.classList.remove("show");
+        verifiedScreen.classList.add("show");
+        createVerifiedStars();
+      }, 5000);
+    }
+
+    // Create twinkling stars in verified screen
+    function createVerifiedStars() {
+      const starsContainer = document.getElementById("verifiedStars");
+      const positions = [
+        { top: "10%", left: "15%" },
+        { top: "20%", left: "85%" },
+        { top: "70%", left: "10%" },
+        { top: "80%", left: "90%" },
+        { top: "40%", left: "5%" },
+        { top: "50%", left: "95%" }
+      ];
+
+      positions.forEach((pos, i) => {
+        const star = document.createElement("div");
+        star.className = "mini-star";
+        star.textContent = "✦";
+        star.style.top = pos.top;
+        star.style.left = pos.left;
+        star.style.animationDelay = (i * 0.2) + "s";
+        starsContainer.appendChild(star);
+      });
+    }
+
+    // Enter site with water droplet animation
+    function enterSite() {
+      // Create water droplets
+      createWaterDroplets();
+      
+      // Dissolve card
+      setTimeout(() => {
+        passwordCard.classList.add("dissolving");
+      }, 500);
+
+      // Hide gate and show content
+      setTimeout(() => {
+        passwordGate.classList.add("hidden");
+        mainContainer.classList.add("show");
+        
+        // Show all containers
+        const allContainers = document.querySelectorAll(".container");
+        allContainers.forEach(container => {
+          container.classList.add("show");
+        });
+        
+        musicBtn.classList.add("show");
+      }, 1500);
+    }
+
+    // Water droplet effect
+    function createWaterDroplets() {
+      const cardRect = passwordCard.getBoundingClientRect();
+      
+      for (let i = 0; i < 25; i++) {
+        setTimeout(() => {
+          const droplet = document.createElement("div");
+          droplet.className = "water-droplet";
+          droplet.style.left = Math.random() * 100 + "%";
+          droplet.style.top = Math.random() * 100 + "%";
+          passwordCard.appendChild(droplet);
+          
+          setTimeout(() => droplet.remove(), 1200);
+        }, i * 40);
+      }
+    }
+
+    // Enter key support
+    passwordInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        checkPassword();
+      }
+    });
 
     // Romantic programming terms
     const words = [
@@ -491,7 +1183,6 @@
     // Parallax effect
     window.addEventListener("scroll", () => {
       if (starsActivated) {
-        // Move stars for depth
         const stars = starfield.querySelectorAll(".star");
         stars.forEach((star, i) => {
           const speed = 0.05 + (i % 3) * 0.02;

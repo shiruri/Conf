@@ -3,15 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <title>TruE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      display: grid;
-      place-content: center;
-      min-height: 100vh;
       font-family: "Inter", sans-serif;
       background: #f5f5f5;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 1.5s ease;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 1rem;
+      gap: 2rem;
+      min-height: 100vh;
+    }
+
+    /* STAR FIELD */
+    #starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+
+    #starfield.active {
+      opacity: 1;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
     }
 
     .box {
@@ -22,16 +68,13 @@
       position: relative;
       background: white;
       border-radius: var(--borderradius);
-      transform: translateY(-2px);
-      z-index: 2;
       max-width: 520px;
       width: 100%;
       animation: fadeLift 1.2s ease forwards;
       opacity: 0;
-    }
-
-    .box:hover {
-      transform: translateY(-4px);
+      transform: translateY(10px);
+      z-index: 1;
+      margin-top: 2rem;
     }
 
     .box::before,
@@ -81,8 +124,60 @@
     }
 
     @keyframes fadeLift {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(-2px); }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* PARALLAX SECTION */
+    .parallax-section {
+      position: relative;
+      width: 100%;
+      min-height: 150vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .floating-words {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .word {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      font-weight: 300;
+      white-space: nowrap;
+      animation: floatUp 15s linear infinite;
+      opacity: 0;
+    }
+
+    .word.code {
+      font-family: 'Courier New', monospace;
+      color: rgba(100, 255, 218, 0.6);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-20vh) translateX(var(--drift));
+        opacity: 0;
+      }
     }
 
     /* MUSIC BUTTON */
@@ -100,58 +195,109 @@
       place-items: center;
       cursor: pointer;
       z-index: 1000;
+      transition: transform 0.3s ease;
+      border: none;
+    }
+
+    .music-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .music-btn.playing {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     /* POPUP */
     .music-popup {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 999;
-      animation: fadeIn 0.4s ease forwards;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
     }
 
-    .music-card {
-      max-width: 360px;
+    .music-popup:not(.hidden) {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .music-popup .box {
+      animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+      transform: scale(0.8);
+    }
+
+    @keyframes popIn {
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .music-popup audio {
       width: 100%;
-      animation: popUp 0.4s ease forwards;
+      margin: 1rem 0;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes popUp {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .music-card audio {
-      width: 100%;
-      margin-top: 1rem;
-    }
-
-    .close {
-      margin-top: 1rem;
-      width: 100%;
-      padding: 0.6rem;
+    .music-popup button {
+      padding: 0.6rem 1.4rem;
+      border: 1px solid black;
+      background: black;
+      color: white;
       border-radius: 8px;
-      border: none;
-      background: #eee;
       cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .music-popup button:hover {
+      background: white;
+      color: black;
     }
 
     .hidden {
       display: none;
     }
 
+    /* SECOND CARD (LOCKED) */
+    .locked {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 1s ease, transform 1s ease;
+      margin-bottom: 4rem;
+    }
+
+    .locked.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Parallax */
+    .parallax {
+      will-change: transform;
+    }
+
     @media (max-width: 480px) {
       .box {
-        padding: 1.5rem;
+        padding: 1.4rem;
+      }
+      
+      .parallax-section {
+        min-height: 120vh;
+      }
+      
+      .word {
+        font-size: 0.85rem;
       }
     }
   </style>
@@ -159,67 +305,200 @@
 
 <body>
 
-  <div class="music-popup" id="popup">
-    <div class="box music-card">
+  <!-- STAR FIELD -->
+  <div id="starfield"></div>
+
+  <!-- MUSIC -->
+  <div class="music-popup hidden" id="popup">
+    <div class="box">
       <h2>Background Music</h2>
       <p class="letter">You can play or pause the music anytime.</p>
-
-      <audio id="bgm" controls loop>
+      <audio id="bgMusic" controls loop>
         <source src="moew.mp3" type="audio/mpeg">
       </audio>
-
-      <button class="close" onclick="closePopup()">Close</button>
+      <button onclick="closePopup()">Close</button>
     </div>
   </div>
 
-  <div class="music-btn" onclick="openPopup()">🎵</div>
+  <button class="music-btn" onclick="openPopup()">🎵</button>
 
-  <div class="box">
-    <h2>TruE</h2>
+  <div class="container">
+    <!-- MAIN LETTER -->
+    <div class="box">
+      <h2>TruE</h2>
+      <p class="letter">
+        I know this is a bit random, I'm so sorry (个_个).
+        I made this letter just to, uhm, confess to you.
+        <br><br>
 
-    <p class="letter">
-      I know this is a bit random, I’m so sorry (个_个).
-      I made this letter just to, uhm, confess to you.
-      <br><br>
+        These past few months have been in agony, and I can't bear it any longer.
+        I like you most ardently.
+        <br>
+        <span class="quote">(from Pride and Prejudice mwueheh)</span>
+        <br><br>
 
-      These past few months have been in agony, and I can’t bear it any longer.
-      I like you most ardently.
-      <br>
-      <span class="quote">(from Pride and Prejudice mwueheh)</span>
-      <br><br>
+        But truly, I've fallen for you since meeting you and having the chance
+        to take a picture with you.
+        <br><br>
 
-      But truly, I’ve fallen for you since meeting you and having the chance
-      to take a picture with you. You’ve probably forgotten about it already,
-      but it meant something to me, hehe.
-      <br><br>
+        Finding out you're an IT student made me happy.
+        That's partly why I'm confessing using a webpage (⁠ꈍᴗꈍ⁠).
+        <br><br>
 
-      I’m not expecting you to reciprocate anything — I may just be a stranger
-      to you. I’ve really, really wanted to know more about you. Finding out
-      you’re an IT student made me happy.
-      <br><br>
+        This is more of a
+        <em>"I like you, can we be friends?"</em> kind of thing.
+      </p>
 
-      That’s partly the reason why I’m confessing using a webpage (⁠ ⁠ꈍ⁠ᴗ⁠ꈍ⁠).
-      <br><br>
+      <br><br> 
+      Also if you have someone special already please disregard everything and just in case I'm sorry for making this (⁠◡⁠ ⁠ω⁠ ⁠◡⁠) with all respect 
+    </div>
+  </div>
 
-      With that, there’s no need for you to answer — it’s completely up to you.
-      This is more of a
-      <em>“I like you, can we be friends?”</em> kind of thing.
-      <br><br>
-      please disregard all of this if you have a special someone already just in case I'm very sorry if thats the case
-      for making this (⁠•⁠ ⁠▽⁠ ⁠•⁠;⁠)
+  <!-- PARALLAX SECTION -->
+  <div class="parallax-section" id="parallaxSection">
+    <div class="floating-words" id="floatingWords"></div>
+  </div>
 
-      <strong>thank you for your time (⁠◡⁠ ⁠ω⁠ ⁠◡⁠).</strong>
-    </p>
+  <div class="container">
+    <!-- SECOND CARD -->
+    <div class="box locked parallax" id="unlockCard">
+      <h2>…</h2>
+      <p class="letter">
+        thank you for reading you then
+        <br><br>
+        <strong>
+          Summary:<br>
+          *･゜ﾟ(^O^)↝ I like you = !false
+        </strong>
+      </p>
+    </div>
   </div>
 
   <script>
+    const popup = document.getElementById("popup");
+    const musicBtn = document.querySelector(".music-btn");
+    const audio = document.getElementById("bgMusic");
+    const starfield = document.getElementById("starfield");
+    const floatingWords = document.getElementById("floatingWords");
+
+    // Romantic programming terms
+    const words = [
+      "while(true) { love(you); }",
+      "const feelings = async () => await forever",
+      "you.compile(myHeart)",
+      "if(you) { happiness = true; }",
+      "try { beWithYou(); } catch(e) { tryAgain(); }",
+      "for(let i=0; i<infinity; i++) smile++",
+      "return myHeart.connectTo(yours)",
+      "function crush() { return true; }",
+      "let us = you + me",
+      "await youAndMe.promise()",
+      "import Love from 'you'",
+      "class Feelings extends Forever",
+      "const future = new Promise(together)",
+      "console.log('thinking of you...')",
+      "while(alive) { adore(you); }",
+      "if(smile) return joy++",
+      "array.push(memories)",
+      "setTimeout(thinking, always)",
+      "const answer = yes",
+      "boolean crush = true",
+      "myHeart.addEventListener('beat', think(you))",
+      "git commit -m 'falling for you'",
+      "npm install happiness",
+      "async function forever() { with(you); }",
+      "export default myLove"
+    ];
+
+    // Generate stars
+    function createStars() {
+      for (let i = 0; i < 200; i++) {
+        const star = document.createElement("div");
+        star.className = "star";
+        star.style.left = Math.random() * 100 + "%";
+        star.style.top = Math.random() * 100 + "%";
+        star.style.animationDelay = Math.random() * 3 + "s";
+        star.style.animationDuration = (2 + Math.random() * 3) + "s";
+        starfield.appendChild(star);
+      }
+    }
+    createStars();
+
+    // Generate floating words
+    function createFloatingWords() {
+      words.forEach((word, index) => {
+        const wordEl = document.createElement("div");
+        wordEl.className = "word code";
+        wordEl.textContent = word;
+        wordEl.style.left = Math.random() * 90 + "%";
+        wordEl.style.animationDelay = (index * 0.8) + "s";
+        wordEl.style.setProperty('--drift', (Math.random() * 40 - 20) + "px");
+        floatingWords.appendChild(wordEl);
+      });
+    }
+
+    // Track music state
+    audio.addEventListener("play", () => {
+      musicBtn.classList.add("playing");
+    });
+
+    audio.addEventListener("pause", () => {
+      musicBtn.classList.remove("playing");
+    });
+
     function closePopup() {
-      document.getElementById("popup").classList.add("hidden");
+      popup.classList.add("hidden");
     }
 
     function openPopup() {
-      document.getElementById("popup").classList.remove("hidden");
+      popup.classList.remove("hidden");
     }
+
+    // Parallax section observer
+    const parallaxSection = document.getElementById("parallaxSection");
+    const unlock = document.getElementById("unlockCard");
+    let starsActivated = false;
+    let wordsCreated = false;
+
+    const parallaxObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !starsActivated) {
+          starfield.classList.add("active");
+          document.body.style.background = "linear-gradient(to bottom, #1a1a2e 0%, #0f0f1e 100%)";
+          starsActivated = true;
+          
+          if (!wordsCreated) {
+            createFloatingWords();
+            wordsCreated = true;
+          }
+        }
+      });
+    }, { threshold: 0.1 });
+
+    parallaxObserver.observe(parallaxSection);
+
+    // Unlock card observer
+    const unlockObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          unlock.classList.add("show");
+        }
+      });
+    }, { threshold: 0.3 });
+
+    unlockObserver.observe(unlock);
+
+    // Parallax effect
+    window.addEventListener("scroll", () => {
+      if (starsActivated) {
+        // Move stars for depth
+        const stars = starfield.querySelectorAll(".star");
+        stars.forEach((star, i) => {
+          const speed = 0.05 + (i % 3) * 0.02;
+          star.style.transform = `translateY(${window.scrollY * speed}px)`;
+        });
+      }
+    });
   </script>
 
 </body>
